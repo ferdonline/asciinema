@@ -103,24 +103,35 @@ Recording finishes when you exit the shell (hit <kbd>Ctrl+D</kbd> or type
 `exit`). If the recorded process is not a shell then recording finishes when
 the process exits.
 
-If the `filename` argument is given then the resulting recording
-(called [asciicast](doc/asciicast-v1.md)) is saved to a local file. It can later be replayed with
-`asciinema play <filename>` and/or uploaded to asciinema.org with `asciinema
-upload <filename>`. If the `filename` argument is omitted then (after asking for
-confirmation) the resulting asciicast is uploaded to asciinema.org, where it can
-be watched and shared.
+If the `filename` argument is omitted then (after asking for confirmation) the
+resulting asciicast is uploaded to
+[asciinema-server](https://github.com/asciinema/asciinema-server) (by default to
+asciinema.org), where it can be watched and shared.
+
+If the `filename` argument is given then the resulting recording (called
+[asciicast](doc/asciicast-v2.md)) is saved to a local file. It can later be
+replayed with `asciinema play <filename>` and/or uploaded to asciinema server
+with `asciinema upload <filename>`.
 
 `ASCIINEMA_REC=1` is added to recorded process environment variables. This
 can be used by your shell's config file (`.bashrc`, `.zshrc`) to alter the
-prompt or play a sound when shell is being recorded.
+prompt or play a sound when the shell is being recorded.
 
 Available options:
 
+* `-i, --stdin` - Enable stdin (keyboard) recording (see below)
 * `-c, --command=<command>` - Specify command to record, defaults to $SHELL
 * `-t, --title=<title>` - Specify the title of the asciicast
 * `-w, --max-wait=<sec>` - Reduce recorded terminal inactivity to max `<sec>` seconds
 * `-y, --yes` - Answer "yes" to all prompts (e.g. upload confirmation)
 * `-q, --quiet` - Be quiet, suppress all notices/warnings (implies -y)
+
+Stdin recording allows for capturing of all characters typed in by the user in
+the currently recorded shell. This may be used by a player (e.g.
+[asciinema-player](https://github.com/asciinema/asciinema-player)) to display
+pressed keys. Because it's basically a key-logging (scoped to a single shell
+instance), it's disabled by default, and has to be explicitly enabled via `-i`
+option.
 
 ### `play <filename>`
 
@@ -131,7 +142,7 @@ your terminal.
 
 Playing from a local file:
 
-    asciinema play /path/to/asciicast.json
+    asciinema play /path/to/asciicast.cast
 
 Playing from HTTP(S) URL:
 
@@ -146,8 +157,8 @@ type="application/asciicast+json" href="....json">` in page's HTML):
 
 Playing from stdin:
 
-    cat /path/to/asciicast.json | asciinema play -
-    ssh user@host cat asciicast.json | asciinema play -
+    cat /path/to/asciicast.cast | asciinema play -
+    ssh user@host cat asciicast.cast | asciinema play -
 
 Playing from IPFS:
 
@@ -170,8 +181,8 @@ __Upload recorded asciicast to asciinema.org site.__
 This command uploads given asciicast (as recorded by `rec` command) to
 asciinema.org, where it can be watched and shared.
 
-`asciinema rec demo.json` + `asciinema play demo.json` + `asciinema upload
-demo.json` is a nice combo for when you want to review an asciicast before
+`asciinema rec demo.cast` + `asciinema play demo.cast` + `asciinema upload
+demo.cast` is a nice combo for when you want to review an asciicast before
 publishing it on asciinema.org.
 
 ### `auth`
@@ -197,7 +208,7 @@ As mentioned in the `Usage > rec` section above, if the `filename` argument to
 to [asciinema.org](https://asciinema.org). You can watch it there and share it via secret URL.
 
 If you prefer to host the recordings yourself, you can do so by recording to a
-file (`asciinema rec demo.json`) and using
+file (`asciinema rec demo.cast`) and using
 [asciinema's standalone web player](https://github.com/asciinema/asciinema-player#self-hosting-quick-start)
 in your HTML page.
 
@@ -224,6 +235,8 @@ available options set:
 
     [record]
     command = /bin/bash -l
+    stdin = no
+    env = SHELL,TERM,USER
     maxwait = 2
     yes = true
     quiet = true

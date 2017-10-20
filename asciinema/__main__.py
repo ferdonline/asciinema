@@ -22,7 +22,7 @@ def positive_float(value):
 
 def rec_command(args, config):
     api = Api(config.api_url, os.environ.get("USER"), config.api_token)
-    return RecordCommand(api, args.filename, args.command, args.title, args.yes, args.quiet, args.max_wait)
+    return RecordCommand(api, args.filename, args.stdin, args.command, args.env, args.title, args.yes, args.quiet, args.max_wait)
 
 
 def play_command(args, config):
@@ -57,13 +57,13 @@ def main():
   Record terminal and upload it to asciinema.org:
     \x1b[1masciinema rec\x1b[0m
   Record terminal to local file:
-    \x1b[1masciinema rec demo.json\x1b[0m
+    \x1b[1masciinema rec demo.cast\x1b[0m
   Record terminal and upload it to asciinema.org, specifying title:
     \x1b[1masciinema rec -t "My git tutorial"\x1b[0m
   Record terminal to local file, "trimming" longer pauses to max 2.5 sec:
-    \x1b[1masciinema rec -w 2.5 demo.json\x1b[0m
+    \x1b[1masciinema rec -w 2.5 demo.cast\x1b[0m
   Replay terminal recording from local file:
-    \x1b[1masciinema play demo.json\x1b[0m
+    \x1b[1masciinema play demo.cast\x1b[0m
   Replay terminal recording hosted on asciinema.org:
     \x1b[1masciinema play https://asciinema.org/a/difqlgx86ym6emrmd8u62yqu8\x1b[0m
 
@@ -77,7 +77,9 @@ For help on a specific command run:
 
     # create the parser for the "rec" command
     parser_rec = subparsers.add_parser('rec', help='Record terminal session')
+    parser_rec.add_argument('-i', '--stdin', help='enable stdin recording, disabled by default', action='store_true', default=cfg.record_stdin)
     parser_rec.add_argument('-c', '--command', help='command to record, defaults to $SHELL', default=cfg.record_command)
+    parser_rec.add_argument('-e', '--env', help='list of environment variables to capture, defaults to ' + config.DEFAULT_RECORD_ENV, default=cfg.record_env)
     parser_rec.add_argument('-t', '--title', help='title of the asciicast')
     parser_rec.add_argument('-w', '--max-wait', help='limit recorded terminal inactivity to max <sec> seconds (can be fractional)', type=positive_float, default=maybe_str(cfg.record_max_wait))
     parser_rec.add_argument('-y', '--yes', help='answer "yes" to all prompts (e.g. upload confirmation)', action='store_true', default=cfg.record_yes)
