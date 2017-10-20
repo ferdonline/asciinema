@@ -29,7 +29,7 @@ X, Linux and FreeBSD. Look for package named `asciinema`. See the
 
 ### Snap supported Linux distros
 
-If your run [Ubuntu or other snap supported Linux distribution](https://snapcraft.io/docs/core/install) you can
+If you run [Ubuntu or other snap supported Linux distribution](https://snapcraft.io/docs/core/install) you can
 install asciinema with:
 
     snap install asciinema --classic
@@ -61,13 +61,26 @@ as the command, install extra packages and manually start `asciinema rec`:
     root@6689517d99a1:~# apt-get install foobar
     root@6689517d99a1:~# asciinema rec
 
-### Running latest version from master
+### Running latest version from source code checkout
 
-If none of the above works for you (or you want to help with development) just
-clone the repo and run asciinema straight from the checkout:
+If none of the above works for you just clone the repo and run asciinema
+straight from the checkout.
+
+Clone the repo:
 
     git clone https://github.com/asciinema/asciinema.git
     cd asciinema
+
+If you want latest stable version:
+
+    git checkout master
+
+If you want current development version:
+
+    git checkout develop
+
+Then run it with:
+
     python3 -m asciinema --version
 
 ## Usage
@@ -82,9 +95,6 @@ all available commands with their options.
 
 __Record terminal session.__
 
-This is the single most important command in asciinema, since it is how you
-utilize this tool's main job.
-
 By running `asciinema rec [filename]` you start a new recording session. The
 command (process) that is recorded can be specified with `-c` option (see
 below), and defaults to `$SHELL` which is what you want in most cases.
@@ -93,12 +103,12 @@ Recording finishes when you exit the shell (hit <kbd>Ctrl+D</kbd> or type
 `exit`). If the recorded process is not a shell then recording finishes when
 the process exits.
 
-If the `filename` argument is given then the resulting recording (called
-[asciicast](doc/asciicast-v1.md)) is saved to a local file. It can later be
-replayed with `asciinema play <filename>` and/or uploaded to asciinema.org with
-`asciinema upload <filename>`. If the `filename` argument is omitted then
-(after asking for confirmation) the resulting asciicast is uploaded to
-asciinema.org for further playback in a web browser.
+If the `filename` argument is given then the resulting recording
+(called [asciicast](doc/asciicast-v1.md)) is saved to a local file. It can later be replayed with
+`asciinema play <filename>` and/or uploaded to asciinema.org with `asciinema
+upload <filename>`. If the `filename` argument is omitted then (after asking for
+confirmation) the resulting asciicast is uploaded to asciinema.org, where it can
+be watched and shared.
 
 `ASCIINEMA_REC=1` is added to recorded process environment variables. This
 can be used by your shell's config file (`.bashrc`, `.zshrc`) to alter the
@@ -158,7 +168,7 @@ sequences for new terminal size.
 __Upload recorded asciicast to asciinema.org site.__
 
 This command uploads given asciicast (as recorded by `rec` command) to
-asciinema.org for further playback in a web browser.
+asciinema.org, where it can be watched and shared.
 
 `asciinema rec demo.json` + `asciinema play demo.json` + `asciinema upload
 demo.json` is a nice combo for when you want to review an asciicast before
